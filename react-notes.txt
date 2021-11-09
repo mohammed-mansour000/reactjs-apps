@@ -1,0 +1,13 @@
+to build react app:
+npm run build --> build your app
+npx serve -s build  --> watch your app on server
+also you need to add this in package.json:
+
+  "homepage": "./" or "homepage":"https://mohammed-mansour000.github.io/Node-Auth-JWT/"
+
+> > > > > > > > > >  > > > 
+import { HashRouter} from "react-router-dom";
+surround Route Components with hashRouter when deploying on 
+github pages
+
+--------------------------------------------------------------
