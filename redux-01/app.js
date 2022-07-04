@@ -20,7 +20,8 @@ store.subscribe(() => { console.log(store.getState()) });
 
 store.dispatch({type: 'INCREMENT'});
 store.dispatch({type: 'DECREMENT'});
-
+store.dispatch({type: 'INCREMENT'});
+store.dispatch({type: 'INCREMENT'});
 
 setInterval(()=> {
     store.dispatch({type: 'DECREMENT'});
