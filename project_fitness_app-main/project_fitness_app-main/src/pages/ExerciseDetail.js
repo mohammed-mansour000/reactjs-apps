@@ -6,6 +6,9 @@ import { exerciseOptions, fetchData, youtubeOptions } from '../utils/fetchData';
 import Detail from '../components/Detail';
 import ExerciseVideos from '../components/ExerciseVideos';
 import SimilarExercises from '../components/SimilarExercises';
+import { useDispatch, useSelector } from 'react-redux';
+import { FETCH_EXERCISE_BY_EXERCISE_ID } from '../redux/constants';
+import { getData } from '../redux/actions';
 
 const ExerciseDetail = () => {
   const [exerciseDetail, setExerciseDetail] = useState({});
@@ -14,6 +17,10 @@ const ExerciseDetail = () => {
   const [equipmentExercises, setEquipmentExercises] = useState([]);
   const { id } = useParams();
 
+  //for redux
+  const { exerciseDetails } = useSelector((state) => state.exerciseReducer);
+  const dispatch = useDispatch();
+ 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -21,28 +28,35 @@ const ExerciseDetail = () => {
       const exerciseDbUrl = 'https://exercisedb.p.rapidapi.com';
       const youtubeSearchUrl = 'https://youtube-search-and-download.p.rapidapi.com';
 
-      const exerciseDetailData = await fetchData(`${exerciseDbUrl}/exercises/exercise/${id}`, exerciseOptions);
-      setExerciseDetail(exerciseDetailData);
+      // const exerciseDetailData = await fetchData(`${exerciseDbUrl}/exercises/exercise/${id}`, exerciseOptions);
+      // setExerciseDetail(exerciseDetailData);
 
-      const exerciseVideosData = await fetchData(`${youtubeSearchUrl}/search?query=${exerciseDetailData.name} exercise`, youtubeOptions);
+      //set exercise detail
+      dispatch(getData(`${exerciseDbUrl}/exercises/exercise/${id}`, exerciseOptions, FETCH_EXERCISE_BY_EXERCISE_ID));
+
+      if(exerciseDetails){
+        console.log(exerciseDetails);
+      }
+
+      const exerciseVideosData = await fetchData(`${youtubeSearchUrl}/search?query=${exerciseDetails.name} exercise`, youtubeOptions);
       setExerciseVideos(exerciseVideosData.contents);
 
-      const targetMuscleExercisesData = await fetchData(`${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`, exerciseOptions);
+      const targetMuscleExercisesData = await fetchData(`${exerciseDbUrl}/exercises/target/${exerciseDetails.target}`, exerciseOptions);
       setTargetMuscleExercises(targetMuscleExercisesData);
 
-      const equimentExercisesData = await fetchData(`${exerciseDbUrl}/exercises/equipment/${exerciseDetailData.equipment}`, exerciseOptions);
+      const equimentExercisesData = await fetchData(`${exerciseDbUrl}/exercises/equipment/${exerciseDetails.equipment}`, exerciseOptions);
       setEquipmentExercises(equimentExercisesData);
     };
 
     fetchExercisesData();
   }, [id]);
 
-  if (!exerciseDetail) return <div>No Data</div>;
+  if (!exerciseDetails) return <div>No Data</div>;
 
   return (
     <Box sx={{ mt: { lg: '96px', xs: '60px' } }}>
-      <Detail exerciseDetail={exerciseDetail} />
-      <ExerciseVideos exerciseVideos={exerciseVideos} name={exerciseDetail.name} />
+      <Detail exerciseDetail={exerciseDetails} />
+      <ExerciseVideos exerciseVideos={exerciseVideos} name={exerciseDetails.name} />
       <SimilarExercises targetMuscleExercises={targetMuscleExercises} equipmentExercises={equipmentExercises} />
     </Box>
   );

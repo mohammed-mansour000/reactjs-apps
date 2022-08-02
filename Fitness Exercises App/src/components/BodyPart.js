@@ -4,6 +4,7 @@ import React from 'react'
 import Icon from '../assets/icons/gym.png';
 
 const BodyPart = ({ item, bodyPart, setBodyPart }) => {
+  
   return (
     <Stack
       type="button"

@@ -12,27 +12,21 @@ const SearchExercises = ({ bodyPart, setBodyPart, setExercises }) => {
   //async means that the function will get some time
   const handleSearch = async () => {
     if(search){
-      console.log(search);
+      // console.log(search);
       const exercisesData = await fetchData(
         'https://exercisedb.p.rapidapi.com/exercises',
         exerciseOptions
       );
-      console.log(exercisesData);
+      
       const searchedExercises = exercisesData.filter(
-        (exercise) =>
-          exercise.name.toLowerCase().include(search) 
-          ||
-          exercise.bodyPart.toLowerCase().include(search) 
-          ||
-          exercise.equipment.toLowerCase().include(search) 
-          ||
-          exercise.target.toLowerCase().include(search) 
+        (item) => item.name.toLowerCase().includes(search)
+               || item.target.toLowerCase().includes(search)
+               || item.equipment.toLowerCase().includes(search)
+               || item.bodyPart.toLowerCase().includes(search),
       );
 
       setsearch('');
       setExercises(searchedExercises);
-
-      console.log(searchedExercises);
     }
   }
 
